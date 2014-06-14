@@ -21,3 +21,4 @@ window.onload = function() {
     };
     window.castReceiverManager.start();
 }
+
