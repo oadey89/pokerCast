@@ -2,23 +2,44 @@ var NAMESPACE = 'urn:x-cast:com.pokercast.custom';
 var APP_ID = 'B525BDB6';
 var castBus;
 
+var players = {};
+
 var gotMessage = function(message, sender){
     var text = 'Received message from ' + sender;
 
     console.log(sender);
-    $('#main-div').html(sender);
 
     castBus.send(sender, 'Thanks for the message!');
     castBus.broadcast(sender + ' just sent a message to me!');
 
     if(message.type==="join"){
-        var x = $('#players');
-        x.append('<li id=sender class="pending">' + message.name + '</li>')
+        players[sender]={name: message.name, status: "pending"};
     }
 
-    if(message.type==="confirm"){
-        var x = $('#' + sender)
+    if(message.type==="ready"){
+        players[sender].status="ready";
     }
+
+    updatePlayers();
+}
+
+var updatePlayers = function(){
+    var allReady = true;
+    var list = $("#players");
+    list.empty();
+    for(key in players){
+        var p = players[key];
+        list.append('<li class="' + p.status + '">' + p.name + '</li>');
+        if(p.status==="pending"){
+            allReady = false;
+        }
+    }
+
+    if(allReady && players.length > 1){
+        $("#main-div").html("READY!!!!!!");
+    }
+
+
 }
 
 

@@ -2,10 +2,11 @@ body {
     background-color: white;
 }
 
-li .pending {
+li.pending {
     color:red;
+    text-decoration-color: yellow
 }
 
-li .live {
+li.ready {
     color:green;
 }
