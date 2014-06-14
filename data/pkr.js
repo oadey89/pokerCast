@@ -13,9 +13,15 @@ var gotMessage = function(message, sender){
 
     if(message.type==="join"){
         var x = $('#players');
-        x.append('<li class="pending">' + message.name + '</li>')
+        x.append('<li id=sender class="pending">' + message.name + '</li>')
+    }
+
+    if(message.type==="confirm"){
+        var x = $('#' + sender)
     }
 }
+
+
 
 window.onload = function() {
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
