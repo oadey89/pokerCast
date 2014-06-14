@@ -17,7 +17,8 @@ window.onload = function() {
     castBus = window.castReceiverManager.getCastMessageBus(NAMESPACE);
 
     castBus.onMessage = function(event) {
-        var message = window.castReceiverManager.deserializeMessage(event.data);
+        console.log(event.data);
+        var message = castBus.deserializeMessage(event.data);
         gotMessage(message, event.senderId);
     };
     window.castReceiverManager.start();
