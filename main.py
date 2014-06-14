@@ -3,7 +3,7 @@ import webapp2
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('knotty is a cock!')
+        self.response.write('Tests')
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
