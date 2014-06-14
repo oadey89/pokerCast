@@ -13,7 +13,7 @@ var gotMessage = function(message, sender){
 
     if(message.type==="join"){
         var x = $('#players');
-        x.append('<li>' + message.name + '</li>')
+        x.append('<li class="pending">' + message.name + '</li>')
     }
 }
 
