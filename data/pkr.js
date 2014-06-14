@@ -1,10 +1,10 @@
 var NAMESPACE = 'urn:x-cast:com.pokercast.custom';
 var APP_ID = 'B525BDB6';
 var castBus;
+
 var players = {};
 
-function gotMessage(message, sender){
-    var text = 'Received message from ' + sender;
+var gotMessage = function(message, sender){
 
     console.log(sender);
 
@@ -22,7 +22,7 @@ function gotMessage(message, sender){
     updatePlayers();
 }
 
-function updatePlayers(){
+var updatePlayers = function(){
     var allReady = true;
     var list = $("#players");
     list.empty();
@@ -34,12 +34,42 @@ function updatePlayers(){
         }
     }
 
-    if(allReady && players.length > 1){
+    if(allReady && players.length >= 1){
+        var deck = shuffleCards();
+        for(card in deck){
+            $("#main-div").append(card)
+        }
         $("#main-div").html("READY!!!!!!");
     }
 
-
 }
+
+function shuffleCards() {
+  var array = [];
+    for(var i=1; i<=52; i++){
+        array.push(i)
+    }
+  var currentIndex = array.length
+    , temporaryValue
+    , randomIndex
+    ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
 
 window.onload = function() {
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
