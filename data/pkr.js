@@ -1,62 +1,36 @@
-
 var PKR_NAMESPACE = 'urn:x-cast:com.pokercast.custom';
-
 var PKR_APP_ID = 'B525BDB6';
 
+/**
+ * Interface for messages from the server.  This inferface allows
+ * messages to be type-checked by the compiler.  It is declared as an
+ * interface rather than a constructor because new instances are never
+ * created by this app.
+ */
 function TicTacToeEvent() {}
 
 TicTacToeEvent.prototype.event;
-
 TicTacToeEvent.prototype.board;
-
 TicTacToeEvent.prototype.message;
-
 TicTacToeEvent.prototype.player;
-
 TicTacToeEvent.prototype.row;
-
 TicTacToeEvent.prototype.column;
-
 TicTacToeEvent.prototype.end_state;
 
 /**
  * The type of messages sent from this app to the server.  This type
  * is defined as a typedef so that instances can be created with
  * object literal syntax and type-checked by the compiler.
- *
- * @typedef {{
- *   command: string,
- *   row: (number|undefined),
- *   column: (number|undefined)
- * }}
  */
 var TicTacToeCommand;
 
-/**
- * @constructor
- * @param {!angular.Scope} $scope The scope.
- * @ngInject
- * @export
- * @suppress {missingProvide}
- */
 function TicTacToeAppCtrl($scope) {
-  /**
-   * @type {{info: function(string)}}
-   * @private
-   */
   this.logger_ = {'info':
-    /**
-     * @param {*} message The message to log.
-     */
     function(message) {
       console.info('[TicTacToeAppCtrl] ' + JSON.stringify(message));
     }
   };
 
-  /**
-   * @type {!angular.Scope}
-   * @private
-   */
   this.scope_ = $scope;
 
   this.model_ = {};
@@ -66,22 +40,8 @@ function TicTacToeAppCtrl($scope) {
   this.scope_['model'] = this.model_;
   this.scope_['model']['message'] = '';
 
-  /**
-   * @type {chrome.cast.Session}
-   * @private
-   */
   this.session_ = null;
-
-  /**
-   * @type {number}
-   * @private
-   */
   this.playerNumber_ = 0;
-
-  /**
-   * @type {boolean}
-   * @private
-   */
   this.playAction = false;
 
   window['__onGCastApiAvailable'] = (function(loaded, errorInfo) {
@@ -100,15 +60,8 @@ function TicTacToeAppCtrl($scope) {
   document.head.appendChild(script);
 }
 
-/**
- * @const {function()}
- */
 TicTacToeAppCtrl.nullFunction = function() {};
 
-/**
- * @param {*} message
- * @private
- */
 TicTacToeAppCtrl.prototype.appendMessage_ = function(message) {
   if (message) {
     this.model_['message'] += '\n' + JSON.stringify(message);
@@ -116,9 +69,6 @@ TicTacToeAppCtrl.prototype.appendMessage_ = function(message) {
   }
 };
 
-/**
- * @private
- */
 TicTacToeAppCtrl.prototype.init_ = function() {
   if (!chrome.cast || !chrome.cast.isAvailable) {
     setTimeout(this.init_.bind(this), 1000);
@@ -141,10 +91,6 @@ TicTacToeAppCtrl.prototype.init_ = function() {
     this.onError_.bind(this));
 };
 
-/**
- * @param {boolean} isAlive .
- * @private
- */
 TicTacToeAppCtrl.prototype.sessionUpdateListener_ = function(isAlive) {
   var message = isAlive ? 'Session Updated' : 'Session Removed';
   message += ': ' + this.session_.sessionId;
@@ -158,17 +104,10 @@ TicTacToeAppCtrl.prototype.sessionUpdateListener_ = function(isAlive) {
   this.safeApply_();
 };
 
-/**
- * @param {string} e Receiver availability.
- * @private
- */
 TicTacToeAppCtrl.prototype.receiverListener_ = function(e) {
   this.appendMessage_('receiver listener: ' + e);
 };
 
-/**
- * @private
- */
 TicTacToeAppCtrl.prototype.onInitSuccess_ = function() {
   this.appendMessage_('init success');
   this.scope_['apiInitialzed'] = true;
@@ -176,10 +115,6 @@ TicTacToeAppCtrl.prototype.onInitSuccess_ = function() {
   this.safeApply_();
 };
 
-/**
- * @param {!chrome.cast.Session} e A new session.
- * @private
- */
 TicTacToeAppCtrl.prototype.sessionListener_ = function(e) {
   this.appendMessage_('New session ID: ' + e.sessionId);
   this.session_ = e;
@@ -194,11 +129,6 @@ TicTacToeAppCtrl.prototype.sessionListener_ = function(e) {
   }
 };
 
-/**
- * @param {string} namespace
- * @param {string} messageString
- * @private
- */
 TicTacToeAppCtrl.prototype.onReceiverMessage_ = function(
     namespace, messageString) {
   this.appendMessage_('Got message: ' +
@@ -247,45 +177,29 @@ TicTacToeAppCtrl.prototype.onReceiverMessage_ = function(
   this.safeApply_();
 };
 
-/**
- * @param {chrome.cast.Error} e An error.
- * @private
- */
 TicTacToeAppCtrl.prototype.onError_ = function(e) {
   this.appendMessage_(e);
 };
 
 /**
  * General on-success callback.
- * @param {string} message
- * @private
  */
 TicTacToeAppCtrl.prototype.onSuccess_ = function(message) {
   this.appendMessage_(message);
 };
 
-/**
- * @private
- */
 TicTacToeAppCtrl.prototype.safeApply_ = function() {
   if (!this.scope_.$$phase) {
     this.scope_.$apply();
   }
 };
 
-/**
- * @private
- */
 TicTacToeAppCtrl.prototype.launch_ = function() {
   this.appendMessage_('launching...');
   chrome.cast.requestSession(this.sessionListener_.bind(this),
     this.onError_.bind(this));
 };
 
-/**
- * @param {TicTacToeCommand} command
- * @private
- */
 TicTacToeAppCtrl.prototype.sendTttMessage_ = function(command) {
   if (this.session_) {
     this.appendMessage_('Sending ' + JSON.stringify(command));
@@ -297,9 +211,6 @@ TicTacToeAppCtrl.prototype.sendTttMessage_ = function(command) {
   }
 };
 
-/**
- * @private
- */
 TicTacToeAppCtrl.prototype.stop_ = function() {
   if (this.session_) {
     this.appendMessage_('Stopping ' + this.session_.sessionId);
@@ -317,7 +228,6 @@ TicTacToeAppCtrl.prototype.stop_ = function() {
 
 /**
  * Joins a game.
- * @private
  */
 TicTacToeAppCtrl.prototype.play_ = function() {
   if (this.session_) {
@@ -334,25 +244,18 @@ TicTacToeAppCtrl.prototype.play_ = function() {
 
 /**
  * Leaves the game.
- * @private
  */
 TicTacToeAppCtrl.prototype.quit_ = function() {
   this.sendTttMessage_({'command': 'leave'});
   this.resetModel_();
 };
 
-/**
- * @private
- */
 TicTacToeAppCtrl.prototype.requestLayout_ = function() {
   this.sendTttMessage_({'command': 'board_layout_request'});
 };
 
 /**
  * Makes a move in the game.
- * @param {number} row
- * @param {number} column
- * @private
  */
 TicTacToeAppCtrl.prototype.move_ = function(row, column) {
   this.sendTttMessage_({'command': 'move', 'row': row, 'column': column});
@@ -360,9 +263,6 @@ TicTacToeAppCtrl.prototype.move_ = function(row, column) {
   this.model_['boardDisplay'][row][column] = this.playerNumber_;
 };
 
-/**
- * @private
- */
 TicTacToeAppCtrl.prototype.resetModel_ = function() {
   this.model_['boardDisplay'] = null;
   this.model_['outcome'] = null;
