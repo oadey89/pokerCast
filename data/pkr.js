@@ -23,7 +23,7 @@ window.onload = function() {
 
     castBus.onMessage = function(event) {
         console.log(event.data);
-        var message = castBus.deserializeMessage(event.data);
+        var message = JSON.parse(event.data);//castBus.deserializeMessage(event.data);
         gotMessage(message, event.senderId);
     };
     window.castReceiverManager.start();
