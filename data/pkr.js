@@ -1,10 +1,9 @@
 var NAMESPACE = 'urn:x-cast:com.pokercast.custom';
 var APP_ID = 'B525BDB6';
 var castBus;
-
 var players = {};
 
-var gotMessage = function(message, sender){
+function gotMessage(message, sender){
 
     console.log(sender);
 
@@ -22,7 +21,7 @@ var gotMessage = function(message, sender){
     updatePlayers();
 }
 
-var updatePlayers = function(){
+function updatePlayers(){
     var allReady = true;
     var list = $("#players");
     list.empty();
