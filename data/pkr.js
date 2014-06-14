@@ -1,58 +1,22 @@
-/** @const */
+
 var PKR_NAMESPACE = 'urn:x-cast:com.pokercast.custom';
 
 var PKR_APP_ID = 'B525BDB6';
 
-/**
- * Interface for messages from the server.  This inferface allows
- * messages to be type-checked by the compiler.  It is declared as an
- * interface rather than a constructor because new instances are never
- * created by this app.
- *
- * @interface
- */
 function TicTacToeEvent() {}
 
-/**
- * @type {string}
- * @expose
- */
 TicTacToeEvent.prototype.event;
 
-/**
- * @type {!Array.<number>|undefined}
- * @expose
- */
 TicTacToeEvent.prototype.board;
 
-/**
- * @type {string|undefined}
- * @expose
- */
 TicTacToeEvent.prototype.message;
 
-/**
- * @type {string|undefined}
- * @expose
- */
 TicTacToeEvent.prototype.player;
 
-/**
- * @type {number|undefined}
- * @expose
- */
 TicTacToeEvent.prototype.row;
 
-/**
- * @type {number|undefined}
- * @expose
- */
 TicTacToeEvent.prototype.column;
 
-/**
- * @type {string|undefined}
- * @expose
- */
 TicTacToeEvent.prototype.end_state;
 
 /**
