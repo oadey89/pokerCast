@@ -10,6 +10,11 @@ var gotMessage = function(message, sender){
 
     castBus.send(sender, 'Thanks for the message!');
     castBus.broadcast(sender + ' just sent a message to me!');
+
+    if(message.type==="join"){
+        var x = $('#players');
+        x.append('<li class="pending">' + message.name + '</li>')
+    }
 }
 
 window.onload = function() {
