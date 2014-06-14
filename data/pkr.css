@@ -4,7 +4,6 @@ body {
 
 li.pending {
     color:red;
-    text-decoration-color: yellow
 }
 
 li.ready {

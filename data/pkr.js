@@ -5,7 +5,6 @@ var castBus;
 var players = {};
 
 var gotMessage = function(message, sender){
-    var text = 'Received message from ' + sender;
 
     console.log(sender);
 
@@ -35,13 +34,41 @@ var updatePlayers = function(){
         }
     }
 
-    if(allReady && players.length > 1){
+    if(allReady && players.length >= 1){
+        var deck = shuffleCards();
+        for(card in deck){
+            $("#main-div").append(card)
+        }
         $("#main-div").html("READY!!!!!!");
     }
 
-
 }
 
+function shuffleCards() {
+  var array = [];
+    for(var i=1; i<=52; i++){
+        array.push(i)
+    }
+  var currentIndex = array.length
+    , temporaryValue
+    , randomIndex
+    ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
 
 
 window.onload = function() {
