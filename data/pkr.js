@@ -73,7 +73,6 @@ function rank(cardSet){
         suitedCards[x-1].sort();
         //build the value count for pair/trip/quad check
         valueCount[editedValue-2]+=1
-
     }
 
     //created sorted values list for quad, full house, trip, two pair and pair checking
@@ -158,15 +157,32 @@ function rank(cardSet){
     }
 
     //check for single pair
-    if(sortedValues[12]==2){
+    if(sortedValues[12]===2){
         var pair = 0;
-        var pkick1 = 0;
-        var pkick2 = 0;
-        var pkick3 = 0;
+        var pkickers = []
+        for(var ii=12;ii=0;i--){
+            if(pair===0 && valueCount[ii]===2){
+                pair=ii+2;
+            }
+            else if(pkickers.length<3 && valueCount[ii]==1){
+                pkickers.push(ii+2);
+            }
+        }
+        pkickers.sort().reverse();
+        return [2,[pair,pair].concat(pkickers)];
 
     }
 
+    //return high cards
     return 1;
+    var hccards = [];
+    for(var ii=12;ii=0;ii--){
+        if(valueCount[ii]===1 && hccards.length<5){
+            hccards.push(ii+2);
+        }
+    }
+    hccards.sort().reverse();
+    return [1,hccards];
 }
 
 
