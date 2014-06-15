@@ -4,18 +4,10 @@ var castBus;
 var players = {};
 
 function gotMessage(message, sender){
-
-    console.log(sender);
-
-    castBus.send(sender, 'Thanks for the message!');
-    castBus.broadcast(sender + ' just sent a message to me!');
-
-    if(message.type==="join"){
-        players[sender]={name: message.name, status: "pending"};
-    }
-
-    if(message.type==="ready"){
-        players[sender].status="ready";
+    if(message.type === "join"){
+        players[sender] = {name: message.name, status: "pending"};
+    } else if(message.type === "ready"){
+        players[sender].status = "ready";
     }
 
     updatePlayers();
@@ -25,6 +17,7 @@ function updatePlayers(){
     var allReady = true;
     var list = $("#players");
     list.empty();
+
     for(key in players){
         var p = players[key];
         list.append('<li class="' + p.status + '">' + p.name + '</li>');
@@ -33,14 +26,16 @@ function updatePlayers(){
         }
     }
 
+    // remember: change to 2 players
     if(allReady && Object.keys(players).length >= 1){
+        $("#main-div").html('<h2>Playing...</h2>');
+        var game = new Game(castBus, players);
 
-        var deck = shuffledDeck();
-        for(i in deck){
-            $("#main-div").append("<p>"+deck[i].value + '   ' + deck[i].suit + "</p>");
+        while(!game.completed()){
+            game.playRound(shuffledDeck());
+            break;
         }
     }
-
 }
 
 function shuffledDeck() {
@@ -52,7 +47,8 @@ function shuffledDeck() {
         }
     }
 
-    for(var j, x, i = a.length; i; j = Math.floor(Math.random() * i), x = a[--i], a[i] = a[j], a[j] = x);
+    for(var j, x, i = a.length; i;
+        j = Math.floor(Math.random() * i), x = a[--i], a[i] = a[j], a[j] = x);
     return a;
 }
 
@@ -191,12 +187,12 @@ function rank(cardSet){
 
 window.onload = function() {
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
-    castBus = window.castReceiverManager.getCastMessageBus(NAMESPACE);
+    castBus = window.castReceiverManager.getCastMessageBus(NAMESPACE, cast.receiver.CastMessageBus.MessageType.JSON);
 
     castBus.onMessage = function(event) {
-        console.log(event.data);
-        var message = JSON.parse(event.data);//castBus.deserializeMessage(event.data);
-        gotMessage(message, event.senderId);
+        console.log('Message from ' + event.senderId);
+        //var message = JSON.parse(event.data);
+        gotMessage(event.data, event.senderId);
     };
     window.castReceiverManager.start();
 }
