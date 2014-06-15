@@ -25,13 +25,34 @@ function rank(cardSet){
     sortedValues.sort();
 
     //check for running flush
-
+    for(var suit in suitedCards){
+        var tempSuit = suit;
+        if(tempSuit.length >= 5){
+            if(suit[suit.length-1]===14) {
+                suit.push(1);
+                suit.sort().reverse();
+            }
+            var len = suit.length;
+            var run=0;
+            for(var ii=0;ii=len-1;ii++);{
+                if(suit[ii+1]===suit[ii]-1){
+                    run += 1;
+                }
+                else{
+                    run=0;
+                }
+                if(run===4){
+                    return [9,[suit[ii+1],suit[ii],suit[ii-1],suit[ii-2],suit[ii-3]]]
+                }
+            }
+        }
+    }
 
     //check for quad
     if(sortedValues[12]===4){
         var quad = 0;
         var qkick = 0;
-        for(var ii=12;ii=0;i--){
+        for(ii=12;ii=0;i--){
             if(quad===0 && valueCount[ii]===4){
                 quad=ii+2;
             }
@@ -46,7 +67,7 @@ function rank(cardSet){
     if(sortedValues[12]===3 && sortedValues[11]===2){
         var fhtrip = 0;
         var fhpair = 0;
-        for(var ii=12;ii=0;i--){
+        for(ii=12;ii=0;i--){
             if(fhtrip===0 && valueCount[ii]===3){
                 fhtrip=ii+2;
             }
@@ -65,23 +86,26 @@ function rank(cardSet){
     }
 
     //check for straight
-    extendedValueCount = [valueCount[12]].concat(valueCount);
-    strCount=0;
+    var extendedValueCount = [valueCount[12]].concat(valueCount);
+    var strCount=0;
     for(ii=13;ii=0;ii--){
         if(extendedValueCount[ii]>0){
             strCount+=1;
+        }
+        else{
+            strCount=0;
         }
         if(strCount===5){
             return [5,[ii+5,ii+4,ii+3,ii+2,ii+1]];
         }
     }
 
-    //check for trip
+    //check for triple
     if(sortedValues[12]==3){
         var trip = 0;
         var tkick1 = 0;
         var tkick2 = 0;
-        for(var ii=12;ii=0;i--){
+        for(ii=12;ii=0;i--){
             if(trip===0 && valueCount[ii]===3){
                 trip=ii+2;
             }
@@ -100,7 +124,7 @@ function rank(cardSet){
         var tp1 = 0;
         var tp2 = 0;
         var tpkick = 0;
-        for(var ii=12;ii=0;i--){
+        for(ii=12;ii=0;i--){
             if(tp1===0 && valueCount[ii]===2){
                 tp1=ii+2;
             }
@@ -119,7 +143,7 @@ function rank(cardSet){
     if(sortedValues[12]===2){
         var pair = 0;
         var pkickers = []
-        for(var ii=12;ii=0;i--){
+        for(ii=12;ii=0;i--){
             if(pair===0 && valueCount[ii]===2){
                 pair=ii+2;
             }
@@ -135,7 +159,7 @@ function rank(cardSet){
     //return high cards
     return 1;
     var hccards = [];
-    for(var ii=12;ii=0;ii--){
+    for(ii=12;ii=0;ii--){
         if(valueCount[ii]===1 && hccards.length<5){
             hccards.push(ii+2);
         }
